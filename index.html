@@ -1,0 +1,2569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rajnesh – Portfolio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ============================================================
+       ROOT / RESET
+    ============================================================ */
+    :root {
+      --sidebar-w: 250px;
+      --sidebar-bg: #1b1b2e;
+      --accent: #4154f1;
+      --accent2: #0d6efd;
+      --white: #ffffff;
+      --light-bg: #f8f9fa;
+      --text-dark: #212529;
+      --text-muted: #6c757d;
+      --watermark-color: rgba(0,0,0,0.045);
+      --transition: 0.3s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 15px; }
+    /* ═══════════ UNIQUE FX PACK ═══════════ */
+
+    /* Instant hero entrance (koi delay nahi) */
+@keyframes heroIn{
+  from{opacity:0;transform:translateY(30px) rotateX(12deg);}
+  to{opacity:1;transform:none;}
+}
+
+/* 1) BOOT SCREEN */
+#boot{position:fixed;inset:0;background:#05070c;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:transform .7s cubic-bezier(.7,0,.3,1),opacity .7s;}
+#boot.done{transform:translateY(-100%);opacity:.4;}
+#bootName{font-family:'Courier New',monospace;font-size:clamp(20px,4vw,34px);letter-spacing:6px;color:#2d40d8;text-shadow:0 0 18px rgba(32,201,151,.6);font-weight:700;}
+.boot-bar{width:min(320px,70vw);height:2px;background:rgba(255,255,255,.12);overflow:hidden;border-radius:2px;}
+.boot-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#2d40d8,#6f42c1);animation:bootLoad 1.4s ease forwards;}
+@keyframes bootLoad{to{width:100%;}}
+#bootStatus{font-family:'Courier New',monospace;font-size:12px;color:rgba(255,255,255,.45);letter-spacing:2px;}
+#bootStatus::after{content:" ▊";color:#2d40d8;animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:0;}}
+
+/* 2) Constellation canvas */
+#home{position:relative;overflow:hidden;}
+#fx-net{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.55;}
+#home > *:not(#fx-net){position:relative;z-index:1;}
+
+/* 4) Spotlight border cards */
+.fx-spot{position:relative;}
+.fx-spot::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+  background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),#2d40d8,transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+  opacity:0;transition:opacity .35s;pointer-events:none;}
+.fx-spot:hover::before{opacity:1;}
+
+/* 5) Click sparks */
+.fx-spark{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:99998;box-shadow:0 0 8px currentColor;animation:fxSpark .7s ease-out forwards;}
+@keyframes fxSpark{to{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0;}}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--light-bg);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      margin:0;
+    }
+
+    /* ============================================================
+       LAYOUT – SIDEBAR + MAIN
+    ============================================================ */
+    #wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+   #sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:250px;
+    height:100vh;
+    background:#111418;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:space-between;
+    padding:40px 0 25px;
+    overflow-y:auto;
+}
+
+    /* Profile */
+    .sidebar-profile{
+    text-align:center;
+}
+
+.sidebar-profile-img{
+    width:170px;
+    height:170px;
+    border-radius:50%;
+    object-fit:cover;
+    border:8px solid #343a40;
+}
+
+.sidebar-name{
+    color:#fff;
+    font-size:18px;
+    font-weight:500;
+    margin-top:18px;
+}
+
+    /* Nav */
+    .sidebar-nav{
+    list-style:none;
+    padding:0;
+    margin:0;
+    width:100%;
+}
+   .sidebar-nav li{
+    margin:18px 0;
+}
+    .sidebar-nav a{
+    display:block;
+    text-align:center;
+    color:#cfcfcf;
+    text-decoration:none;
+    font-size:16px;
+    font-weight:400;
+    transition:.3s;
+
+}
+    .sidebar-nav a:hover,
+.sidebar-nav a.active{
+    color:#0d6efd;
+}
+
+    /* Social icons */
+    .sidebar-socials{
+    display:flex;
+    gap:18px;
+}
+
+.sidebar-socials a{
+    color:#bdbdbd;
+    font-size:16px;
+    transition:.3s;
+}
+
+.sidebar-socials a:hover{
+    color:#0d6efd;
+}
+
+    /* ── MAIN CONTENT ── */
+    #main-content {
+      margin-left:250px;
+    width:calc(100% - 250px);
+    }
+
+/* ═══════════ HERO BACKGROUND IMAGE ═══════════ */
+#home {
+  background-image: 
+    linear-gradient(rgba(8, 10, 14, 0.65), rgba(8, 10, 14, 0.85)), 
+    url('https://i.ibb.co/s9Xk00w1/hero-bg.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+    /* ============================================================
+       HAMBURGER (mobile only)
+    ============================================================ */
+    /* ============ MOBILE MENU (fixed) ============ */
+#mobile-menu{
+  position:fixed; top:0; left:0; width:100%;
+  max-height:100vh; display:flex; flex-direction:column;
+  z-index:1200; transform:translateY(-105%);
+  transition:transform .4s ease; visibility:hidden;
+}
+#mobile-menu.open{ transform:translateY(0); visibility:visible; }
+
+.mnav-top{
+  flex:0 0 auto;  /* top bar STATIC */
+  display:flex; align-items:center; justify-content:space-between;
+  background:#111418; padding:14px 18px;
+}
+.mnav-name{ color:#fff; font-size:20px; font-weight:700; }
+.mnav-icons{ display:flex; align-items:center; gap:18px; }
+.mnav-icons a{ color:#fff; font-size:15px; }
+#mobile-close{ background:none; border:none; color:#fff; font-size:26px; line-height:1; cursor:pointer; }
+
+.mnav-list{
+  flex:1 1 auto; overflow-y:auto;  /* sirf ye SCROLL hoga */
+  background:rgba(10,12,15,.9); padding:6px 18px 24px;
+}
+.mnav-list a{
+  display:block; padding:14px 2px; color:#fff; text-decoration:none;
+  font-size:16px; border-bottom:1px solid rgba(255,255,255,.12);
+}
+.mnav-list a:hover, .mnav-list a.active{ color:#4154f1; }
+
+#sidebar-overlay.open{ display:block; }
+
+@media (min-width:992px){
+  #mobile-menu{ display:none; }  /* ab sirf mobile menu hide hoga, left panel nahi */
+}
+   #hamburger {
+    display: none;
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 1100;
+
+    width: 45px;
+    height: 45px;
+
+    background: #111418;
+    color: #fff;
+
+    border: none;
+    border-radius: 8px;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,.2);
+}
+
+#hamburger::before {
+    content: "☰";
+    font-size: 24px;
+    line-height: 1;
+    color: #fff;
+}
+
+#hamburger i {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    #hamburger {
+        display: flex;
+    }
+}
+    #sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+
+    /* ============================================================
+       HERO SECTION
+    ============================================================ */
+    #home{
+    position:relative;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:url("images/hero.jpg") center center/cover no-repeat;
+}
+
+#home::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.55);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    color:#fff;
+}
+
+.hero-welcome{
+    font-size:18px;
+    color:#fff;
+    margin-bottom:10px;
+}
+
+.hero-title{
+    font-size:70px;
+    font-weight:700;
+    line-height:1.1;
+    margin-bottom:20px;
+}
+
+.hero-subtitle{
+    font-size:18px;
+    color:#ddd;
+}
+
+.btn-hero{
+    margin-top:35px;
+    padding:14px 38px;
+    border:2px solid #0d6efd;
+    background:transparent;
+    color:#fff;
+    border-radius:40px;
+    transition:.3s;
+}
+
+.btn-hero:hover{
+    background:#0d6efd;
+}
+
+/* Hire Me button  */
+#home a[href="#about"]{
+  display: inline-block;
+  text-decoration: none;
+  margin-top: 35px;   /* 👈 can increase margin (20px / 50px / 60px) */
+}
+    /* ============================================================
+       SHARED SECTION STYLES
+    ============================================================ */
+    section { padding:90px 60px;
+    position:relative; }
+    section:nth-child(even) { background: var(--white); }
+
+    /* Watermark heading */
+    .watermark {
+      position: absolute;
+      top: 15px; left: 50%;
+      transform: translateX(-50%);
+      font-size:120px;
+      font-weight: 800;
+      color:rgba(0,0,0,.04);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity:.05;
+    }
+
+    .section-content { position: relative; z-index: 1; }
+
+    /* Section heading */
+    .section-heading{
+    font-size: 1.75rem !important;
+    font-weight: 600 !important;
+    margin-bottom:8px;
+}
+    .section-heading span { color:#4154f1; }
+    .section-divider{
+    width:70px;
+    height:4px;
+    background:#4154f1;
+    margin-bottom:40px;
+}
+
+    /* ============================================================
+       ABOUT SECTION
+    ============================================================ */
+    .about-intro {
+      font-size:28px;
+      color: var(--text-dark);
+      font-weight: 700;
+      margin-bottom: 25px;
+    }
+    .about-intro span { color: var(--accent); font-weight: 600; }
+    .about-desc{
+    font-size:16px;
+    line-height:1.9;
+    color:#6c757d;
+    margin-bottom:20px;
+}
+    .about-details { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+    .about-details li { display:flex; justify-content:space-between;
+    border-bottom:1px solid #ececec;
+    padding:12px 0;
+    font-size:15px;
+    }
+    .about-details strong{ font-weight:600;}
+
+    .about-details span{color:#777;}
+    .about-details li strong { color: var(--text-dark); min-width: 60px; }
+    .about-details li span { color: var(--text-muted); }
+    .about-details li a { color: var(--accent); text-decoration: none; }
+    .btn-cv {
+      margin-top:25px;
+    padding:14px 32px;
+    border-radius:40px;
+    background:#4154f1;
+    color:white;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+      border: none;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      transition: all var(--transition);
+    }
+    .btn-cv:hover { background: #2d40d8; color: #fff; transform: translateY(-2px); }
+
+    /* Stats */
+    .about-stat{
+    text-align:center;
+}
+
+.about-stat strong{
+    font-size:48px;
+    font-weight:600;
+    color:#6c757d !important;
+}
+
+.about-stat small{
+    display:block;
+    margin-top:10px;
+    font-size:15px;
+    color:#777;
+}
+    /* ============================================================
+       SERVICES
+    ============================================================ */
+    .service-card{
+    display:flex;
+    align-items:flex-start;
+    gap:25px;
+    background:transparent;
+    border:none;
+    box-shadow:none;
+    padding:20px 0;
+    transition:.3s;
+}
+   
+    .service-icon{
+    width:70px;
+    height:70px;
+    border-radius:12px;
+    background:#eef3ff;
+    color:#4154f1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+    flex-shrink:0;
+}
+    .service-card h5{
+    font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #252b33;
+}
+    .service-card p{
+    font-size:15px;
+    color:#6c757d;
+    line-height:1.8;
+    margin:0;
+}
+.service-card:hover .service-icon{
+    background:#4154f1;
+    color:#fff;
+    transition:.35s;
+}
+#services .row{
+    row-gap:40px;
+}
+    /* ===========================
+   RESUME / TIMELINE
+=========================== */
+
+.timeline{
+    position:relative;
+    padding-left:45px;
+    margin-top:25px;
+}
+
+.timeline::before{
+    content:"";
+    position:absolute;
+    left:8px;
+    top:0;
+    bottom:0;
+    width:2px;
+    background:#dee2e6;
+}
+
+.tl-item{
+    position:relative;
+    padding-bottom:45px;
+}
+
+.tl-item:last-child{
+    padding-bottom:0;
+}
+
+.tl-item::before{
+    content:"";
+    position:absolute;
+    left:-42px;
+    top:7px;
+    width:16px;
+    height:16px;
+    background:#4154f1;
+    border:4px solid #fff;
+    border-radius:50%;
+    box-shadow:0 0 0 2px #4154f1;
+}
+
+.tl-year{
+    display:inline-block;
+    background:#4154f1;
+    color:#fff;
+    padding:5px 14px;
+    border-radius:50px;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:18px;
+}
+
+.tl-item h6{
+    font-size:20px;
+    font-weight:500;
+    margin-bottom:8px;
+    color:#252b33;
+}
+
+.tl-place{
+    font-size:16px;
+    color:#4154f1;
+    margin-bottom:15px;
+}
+
+.tl-item p{
+    font-size:15px;
+    line-height:1.9;
+    color:#6c757d;
+    margin:0;
+}
+
+#summary .section-heading{
+    font-size:42px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+#summary h5{
+    font-size:22px !important;
+    font-weight:600 !important;
+    margin-bottom:35px !important;
+}
+
+.skill-label{
+    font-size:17px;
+    font-weight:500;
+    margin:18px 0 8px;
+}
+
+.skill-bar{
+    height:8px;
+    border-radius:20px;
+}
+
+.skill-fill{
+    border-radius:20px;
+}
+
+#summary .row{
+    row-gap:50px;
+}
+
+#summary{
+    padding:110px 70px;
+}
+
+.skills-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:20px;
+}
+
+.skills-list span{
+    padding:10px 18px;
+    background:#f5f5f5;
+    border:1px solid #e5e5e5;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:500;
+    color:#444;
+    transition:.3s;
+}
+
+.skills-list span:hover{
+    background:#4154f1;
+    color:#fff;
+    border-color:#4154f1;
+}
+
+.resume-item h4{
+    font-size: 22px !important;
+  font-weight: 600 !important;
+  margin-bottom: 35px !important;
+}
+
+.skills-category h6{
+    font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #252b33;
+}
+
+    /* ============================================================
+       PORTFOLIO
+    ============================================================ */
+    .portfolio-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .filter-btn{
+    border:none;
+    background:transparent;
+    color:#555;
+    padding:8px 20px;
+    border-radius:30px;
+    font-size:14px;
+    transition:.3s;
+}
+
+
+.filter-btn.active,
+.filter-btn:hover{
+    background:#4154f1;
+    color:white;
+}
+
+    #portfolio{
+    padding-top:80px;
+    padding-bottom:80px;
+}
+
+#portfolio .section-heading{
+    font-size:32px;
+}
+
+#portfolio .section-divider{
+    
+}
+    .portfolio-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+    margin-top:40px;
+}
+
+.portfolio-item{
+    position:relative;
+    overflow:hidden;
+    border-radius:8px;
+    height:260px;
+    cursor:pointer;
+}
+
+.portfolio-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.4s ease;
+}
+
+
+.portfolio-item:hover img{
+    transform:scale(1.08);
+}
+
+
+.portfolio-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(13,110,253,.85);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    transition:.3s ease;
+}
+
+
+.portfolio-item:hover .portfolio-overlay{
+    opacity:1;
+}
+
+
+.portfolio-overlay i{
+    color:white;
+    font-size:35px;
+}
+
+
+/* ============ Portfolio Project Modal ============ */
+#portfolio img{cursor:pointer;}
+.pf-overlay{
+  position:fixed;inset:0;z-index:9999;background:rgba(8,10,14,.88);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;visibility:hidden;transition:.3s ease;
+}
+.pf-overlay.open{opacity:1;visibility:visible;}
+.pf-modal{
+  background:#f8f9fc;border-radius:10px;position:relative;width:100%;
+  max-width:1060px;max-height:92vh;overflow-y:auto;padding:40px 45px;
+  transform:translateY(25px);transition:.3s ease;
+}
+.pf-overlay.open .pf-modal{transform:translateY(0);}
+.pf-close{
+  position:absolute;top:16px;right:20px;border:none;background:none;
+  font-size:26px;line-height:1;color:#9aa0a8;cursor:pointer;transition:.2s;
+}
+.pf-close:hover{color:#333;transform:rotate(90deg);}
+.pf-title{text-align:center;font-size:26px;font-weight:700;color:#253858;margin:0 0 30px;}
+.pf-body{display:flex;gap:40px;flex-wrap:wrap;}
+.pf-left{flex:1 1 440px;}
+.pf-left img{width:100%;height:380px;object-fit:cover;display:block;}
+.pf-dots{display:flex;gap:14px;justify-content:center;margin-top:24px;}
+.pf-dot{width:8px;height:8px;border-radius:50%;background:#bfc5cd;cursor:pointer;transition:.2s;}
+.pf-dot:hover{background:#2d40d8;}
+.pf-dot.active{background:#2d40d8;box-shadow:0 0 0 3px #f8f9fc,0 0 0 5px #2d40d8;}
+.pf-right{flex:1 1 320px;}
+.pf-right h4{margin:0 0 12px;font-size:17px;color:#253858;}
+.pf-info{margin:0 0 26px;color:#697180;line-height:1.9;font-size:15px;}
+.pf-details{list-style:none;margin:0;padding:0;}
+.pf-details li{display:flex;gap:10px;align-items:baseline;padding:12px 0;border-bottom:1px solid #e6e9ee;font-size:15px;}
+.pf-details .lbl{color:#253858;font-weight:600;min-width:105px;}
+.pf-details .val{color:#697180;}
+.pf-details a{color:#2d40d8;text-decoration:none;}
+.pf-details a:hover{text-decoration:underline;}
+.pf-share{display:flex;align-items:center;gap:20px;padding-top:22px;font-size:17px;}
+.pf-share .lbl{color:#253858;font-weight:600;font-size:15px;}
+.pf-share a{color:#4a5568;transition:.2s;}
+.pf-share a:hover{color:#2d40d8;}
+@media(max-width:768px){
+  .pf-modal{padding:30px 20px;}
+  .pf-left img{height:auto;aspect-ratio:4/3;}
+}
+/* PDF Case Study Panel */
+.pf-pdf-wrap{width:100%;background:#eef1fb;border:2px dashed #4154f1;border-radius:12px;padding:45px 20px;text-align:center;}
+.pf-pdf-wrap > i{font-size:60px;color:#e04638;}
+.pf-pdf-wrap h5{margin:14px 0 4px;font-size:18px;color:#253858;}
+.pf-pdf-wrap p{margin:0 0 20px;font-size:13px;color:#697180;}
+.pf-pdf-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.pf-pdf-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:30px;background:#4154f1;color:#fff !important;text-decoration:none !important;font-size:14px;font-weight:600;transition:.25s;}
+.pf-pdf-btn:hover{background:#2d40d8;}
+.pf-pdf-btn.ghost{background:transparent;color:#4154f1 !important;border:2px solid #4154f1;}
+.pf-pdf-btn.ghost:hover{background:#4154f1;color:#fff !important;}
+/* Video Project Cards */
+.portfolio-item video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.4s ease;
+}
+.portfolio-item.video-item:hover video{
+  transform:scale(1.05);
+}
+.portfolio-item.video-item .portfolio-overlay i{
+  background:rgba(255,255,255,.95);
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#4154f1;
+  font-size:22px;
+  transition:.3s;
+}
+.portfolio-item.video-item:hover .portfolio-overlay i{
+  transform:scale(1.15);
+  background:#fff;
+}
+
+/* Modal Video Player */
+.pf-video-wrap{
+  position:relative;
+  width:100%;
+  background:#000;
+  border-radius:8px;
+  overflow:hidden;
+}
+.pf-video-wrap video{
+  width:100%;
+  height:auto;
+  display:block;
+  max-height:380px;
+  object-fit:contain;
+}
+
+/* ═══════════ BIGGER MODAL IMAGE + ZOOM ═══════════ */
+.pf-modal{max-width:1200px;}              /* modal chaudi hogi */
+.pf-left{flex:1 1 520px;}                 /* image column bada */
+.pf-left img{
+  width:100%;
+  height:auto;                            /* ab image apni poori height legi */
+  max-height:600px;
+  object-fit:contain;                     /* image kategi nahi, poori dikhegi */
+  background:#10131a;
+  border-radius:8px;
+  cursor:zoom-in;                         /* batata hai click karke zoom hota hai */
+}
+
+/* Full-screen zoom overlay */
+#pfZoom{
+  position:fixed;inset:0;background:rgba(0,0,0,.93);
+  z-index:99999;display:none;align-items:center;justify-content:center;
+  cursor:zoom-out;padding:20px;
+}
+#pfZoom.open{display:flex;}
+#pfZoom img{
+  max-width:96%;max-height:96%;object-fit:contain;
+  border-radius:6px;box-shadow:0 0 50px rgba(0,0,0,.7);
+}
+
+/* Load More Button */
+#loadMore{
+  display:flex;align-items:center;gap:10px;
+  margin:35px auto 0;padding:13px 34px;
+  border:none;border-radius:30px;
+  background:#4154f1;color:#fff;
+  font-size:14px;font-weight:600;cursor:pointer;
+  transition:.3s;box-shadow:0 6px 18px rgba(65,84,241,.35);
+}
+#loadMore:hover{background:#2d40d8;transform:translateY(-2px);}
+#loadMore i{transition:.3s;}
+#loadMore:hover i{transform:translateY(3px);}
+    /* ============================================================
+       TESTIMONIALS
+    ============================================================ */
+    #testimonials{
+    padding:90px 60px;
+}
+
+#testimonials .section-heading{
+    font-size:1.75rem !important;
+    font-weight:600 !important;
+    margin-bottom:8px;
+}
+
+#testimonials .section-divider{
+    width:70px;
+    height:4px;
+    margin-bottom:40px;
+}
+
+#testimonials .row{
+    row-gap:30px;
+}
+
+.testimonial-card{
+    background:transparent;
+    border:none;
+    border-radius:0;
+    box-shadow:none;
+    padding:20px 0;
+    height:100%;
+}
+
+.testimonial-card:hover{
+    box-shadow:none;
+}
+
+.testi-header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.testi-avatar{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #4154f1;
+}
+
+.testi-name{
+    font-size:16px;
+    font-weight:600;
+    color:#252b33;
+    margin-bottom:3px;
+}
+
+.testi-role{
+    font-size:14px;
+    color:#6c757d;
+    margin:0;
+}
+
+.testi-text{
+    font-size:15px;
+    line-height:1.9;
+    color:#6c757d;
+    font-style:italic;
+    margin-bottom:14px;
+    max-width:650px;
+}
+
+.testi-stars{
+    color:#ffc107;
+    font-size:14px;
+}
+
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    #contact{
+    padding:90px 60px;
+}
+
+#contact .section-heading{
+    font-size:1.75rem !important;
+    font-weight:600 !important;
+    margin-bottom:8px;
+}
+
+#contact .section-divider{
+    width:70px;
+    height:4px;
+    margin-bottom:40px;
+}
+
+#contact .row{
+    row-gap:40px;
+}
+
+#contact .contact-column-title{
+    font-size:20px;
+    font-weight:500;
+    color:#252b33;
+    margin-bottom:25px;
+}
+
+.contact-info-item{
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.contact-info-icon{
+    width:48px;
+    height:48px;
+    background:#eef3ff;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#4154f1;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.contact-info-text h6{
+    font-size:16px;
+    font-weight:500;
+    color:#252b33;
+    margin-bottom:5px;
+}
+
+.contact-info-text span{
+    font-size:15px;
+    line-height:1.7;
+    color:#6c757d;
+}
+
+#contact .follow-title{
+    font-size:16px;
+    font-weight:500;
+    color:#252b33;
+    margin-top:30px;
+    margin-bottom:15px;
+}
+
+.follow-socials{
+    display:flex;
+    gap:12px;
+    margin-top:0;
+}
+
+.follow-social-btn{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:15px;
+    text-decoration:none;
+    color:#fff;
+    transition:transform .3s ease;
+}
+
+.follow-social-btn:hover{
+    transform:translateY(-3px);
+    color:#fff;
+}
+
+
+/* ---------- CONTACT FORM ---------- */
+
+#contact .form-title{
+    font-size:20px;
+    font-weight:500;
+    color:#252b33;
+    margin-bottom:25px;
+}
+
+#contact form .row{
+    row-gap:18px;
+}
+
+.form-control{
+    border:1px solid #dee2e6;
+    border-radius:8px;
+    padding:13px 16px;
+    font-size:15px;
+    line-height:1.6;
+    font-family:'Poppins',sans-serif;
+    color:#212529;
+    transition:border-color .3s ease, box-shadow .3s ease;
+}
+
+.form-control::placeholder{
+    color:#999;
+}
+
+.form-control:focus{
+    border-color:#4154f1;
+    box-shadow:0 0 0 3px rgba(65,84,241,.10);
+}
+
+textarea.form-control{
+    resize:vertical;
+    min-height:140px;
+}
+
+.btn-send{
+    background:#4154f1;
+    color:#fff;
+    border:none;
+    padding:13px 30px;
+    border-radius:40px;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+    transition:all .3s ease;
+}
+
+.btn-send:hover{
+    background:#2d40d8;
+    transform:translateY(-2px);
+}
+
+    /* ============================================================
+   FOOTER
+============================================================ */
+
+footer{
+    background:#111418;
+    color:#6c757d;
+    text-align:center;
+    padding:30px 20px;
+    border-top:1px solid #252930;
+}
+
+footer p{
+    margin:0;
+    font-size:14px;
+    line-height:1.8;
+    color:#8a8f98;
+}
+
+footer a{
+    color:#4154f1;
+    text-decoration:none;
+    font-weight:500;
+    transition:.3s ease;
+}
+
+footer a:hover{
+    color:#6b7aff;
+}
+
+    /* ============================================================
+       SCROLL REVEAL
+    ============================================================ */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+
+    /* =========================================
+   RESPONSIVE FIX
+========================================= */
+
+@media (max-width: 991.98px) {
+
+    #sidebar {
+        transform: translateX(-100%);
+        width: 260px;
+        transition: transform .3s ease;
+    }
+
+    #sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0,0,0,.25);
+    }
+
+    #sidebar-overlay.open {
+        display: block;
+    }
+
+    #hamburger {
+        display: flex;
+    }
+
+    #main-content {
+        margin-left: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    section {
+        width: 100%;
+        max-width: 100%;
+        padding: 70px 25px;
+    }
+
+    .watermark {
+        font-size: clamp(2rem, 10vw, 4rem);
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .portfolio-item {
+        height: 230px;
+    }
+
+    .hero-title {
+        font-size: clamp(42px, 8vw, 70px);
+    }
+
+    .hero-content {
+        width: 100%;
+        max-width: 800px;
+        padding: 0 25px;
+    }
+
+    .about-intro {
+        font-size: clamp(24px, 4vw, 28px);
+    }
+
+    #summary {
+        padding: 80px 25px;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 767.98px) {
+
+    #main-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    section,
+    #summary,
+    #portfolio {
+        width: 100%;
+        padding: 65px 20px;
+    }
+
+    .hero-title {
+        font-size: clamp(34px, 10vw, 48px);
+        line-height: 1.15;
+    }
+
+    .hero-welcome {
+        font-size: 16px;
+    }
+
+    .hero-subtitle {
+        font-size: 15px;
+    }
+
+    .section-heading {
+        font-size: 28px !important;
+    }
+
+    .watermark {
+        font-size: 12vw;
+        white-space: nowrap;
+    }
+
+    .about-details li {
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .about-details li span,
+    .about-details li a {
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .about-stat strong {
+        font-size: 34px;
+    }
+
+    .service-card {
+        gap: 18px;
+    }
+
+    .service-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+
+    .service-card h5 {
+        font-size: 18px;
+    }
+
+    .service-card p {
+        font-size: 14px;
+    }
+
+    .timeline {
+        padding-left: 38px;
+    }
+
+    .tl-item::before {
+        left: -35px;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .portfolio-item {
+        height: 220px;
+    }
+
+    .contact-info-text span {
+        word-break: break-word;
+    }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 575.98px) {
+
+    section,
+    #summary,
+    #portfolio {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .hero-content {
+        padding: 0 18px;
+    }
+
+    .hero-title {
+        font-size: 36px;
+    }
+
+    .section-heading {
+        font-size: 25px !important;
+    }
+
+    .section-divider {
+        margin-bottom: 28px;
+    }
+
+    .about-stat strong {
+        font-size: 30px;
+    }
+
+    .about-stat small {
+        font-size: 13px;
+    }
+
+    .service-card {
+        align-items: flex-start;
+    }
+
+    .service-icon {
+        width: 50px;
+        height: 50px;
+        flex: 0 0 50px;
+    }
+
+    .tl-item h6 {
+        font-size: 18px;
+    }
+
+    .tl-place {
+        font-size: 14px;
+    }
+
+    .tl-item p {
+        font-size: 14px;
+    }
+
+    .portfolio-item {
+        height: 200px;
+    }
+}
+  </style>
+</head>
+<body>
+
+<!-- Hamburger (mobile) -->
+<button id="hamburger" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+<div id="sidebar-overlay"></div>
+<!-- ===== Mobile Menu (unique id) ===== -->
+<div id="mobile-menu">
+  <!-- TOP BAR (static) -->
+  <div class="mnav-top">
+    <span class="mnav-name">Rajnesh Kushwaha</span>
+    <div class="mnav-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-dribbble"></i></a>
+      <a href="#"><i class="fab fa-github"></i></a>
+      <button id="mobile-close" aria-label="Close menu">&times;</button>
+    </div>
+  </div>
+  <!-- MENU (scrollable) -->
+  <nav class="mnav-list">
+    <a href="#home">Home</a>
+    <a href="#about">About Me</a>
+    <a href="#services">What I Do</a>
+    <a href="#summary">Resume</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#testimonials">Testimonial</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</div>
+<div id="wrapper">
+  <!-- ═══════════════════════════════════════════════
+       SIDEBAR (FIXED)
+  ════════════════════════════════════════════════ -->
+  <aside id="sidebar">
+
+    <div class="sidebar-profile">
+      <img src="https://i.ibb.co/JjM3t9ZQ/Whats-App-Image-2026-08-09-at-12-45-14-AM.jpg" class="sidebar-profile-img">
+        <h2 class="sidebar-name">Rajnesh Kushwaha</h2>
+    </div>
+
+    <ul class="sidebar-nav" id="sidebarNav">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#about">About Me</a></li>
+        <li><a href="#services">What I Do</a></li>
+        <li><a href="#summary">Resume</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#testimonials">Testimonial</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="sidebar-socials">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-dribbble"></i></a>
+        <a href="#"><i class="fab fa-github"></i></a>
+    </div>
+
+</aside>
+  <!-- ═══════════════════════════════════════════════
+       MAIN CONTENT (SCROLLABLE)
+  ════════════════════════════════════════════════ -->
+  <main id="main-content">
+
+    <!-- ─── HERO ─── -->
+    <section id="home">
+      <div class="hero-content">
+        <p class="hero-welcome">Welcome</p>
+        <h1 class="hero-title">
+          I'm a <span class="typed-text" id="typedText"></span><span class="cursor">|</span>
+        </h1>
+        <p class="hero-subtitle">based in Noida Sec-45.</p>
+        <a href="#about" class="btn-hero">Hire Me</a>
+      </div>
+    </section>
+
+    <!-- ─── ABOUT ─── -->
+    <section id="about">
+      <div class="watermark">ABOUT ME</div>
+      <div class="section-content">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-7 reveal">
+            <h2 class="section-heading">I'm <span>Rajnesh kushwaha</span>, a UI Designer</h2>
+            <div class="section-divider"></div>
+            <p class="about-desc">
+               with 7+ years of experience in designing websites, landing pages, mobile app interfaces, branding materials, social media creatives, and marketing assets.
+
+            </p>
+            <p class="about-desc">
+               Experienced in working with clients across different industries and delivering visually engaging, user-focused design solutions that support business objectives and enhance brand presence.
+            </p>
+          </div>
+          <div class="col-lg-5 reveal reveal-d2">
+            <ul class="about-details">
+              <li><strong>Name:</strong> <span>Rajnesh Kushwaha</span></li>
+              <li><strong>Email:</strong> <a href="mailto:rkrajnesh2@gmai.com">rkrajnesh2@gmai.com</a></li>
+              <li><strong>Age:</strong> <span>27</span></li>
+              <li><strong>From:</strong> <span>Noida Sec-45</span></li>
+            </ul>
+            <a href="#" class="btn-cv"><i class="fas fa-download"></i> Download CV</a>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="row g-4 mt-3 text-center reveal reveal-d1">
+          <div class="col-6 col-md-3 about-stat">
+            <strong>7+</strong>
+            <small>Years Experience</small>
+          </div>
+          <div class="col-6 col-md-3 about-stat">
+            <strong>80+</strong>
+            <small>Happy Clients</small>
+          </div>
+          <div class="col-6 col-md-3 about-stat">
+            <strong>90+</strong>
+            <small>Projects Done</small>
+          </div>
+          <div class="col-6 col-md-3 about-stat">
+            <strong>15+</strong>
+            <small>Technologies Mastered</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SERVICES ─── -->
+    <section id="services">
+      <div class="watermark">SERVICES</div>
+      <div class="section-content">
+        <h2 class="section-heading">What I <span>Do</span></h2>
+        <div class="section-divider"></div>
+        <div class="row g-3">
+          <div class="col-lg-6 reveal reveal-d1">
+            <div class="service-card">
+
+    <div class="service-icon">
+        <i class="fas fa-palette"></i>
+    </div>
+    <div>
+        <h5>Graphic Design</h5>
+        <p>
+            Creative logos, branding kits and social media creatives that give your business a professional and memorable identity.
+        </p>
+    </div>
+</div>
+          </div>
+          <div class="col-lg-6 reveal reveal-d2">
+            <div class="service-card">
+
+    <div class="service-icon">
+        <i class="fas fa-code"></i>
+    </div>
+
+    <div>
+
+        <h5>Web Design</h5>
+              <p>Clean, responsive and modern websites that look stunning on every device and turn your visitors into customers.</p>
+
+    </div>
+
+</div>
+            
+          </div>
+          <div class="col-lg-6 reveal reveal-d3">
+<div class="service-card">
+
+    <div class="service-icon">
+        <i class="fas fa-pen-nib"></i>
+    </div>
+
+    <div>
+
+        <h5>UI/UX Design</h5>
+              <p>User-friendly interfaces crafted in Figma wireframes, prototypes and complete design systems for a smooth user journey.</p>
+
+    </div>
+
+</div>
+            
+          </div>
+          <div class="col-lg-6 reveal reveal-d1">
+            <div class="service-card">
+
+    <div class="service-icon">
+        <i class="fas fa-mobile-alt"></i>
+    </div>
+
+    <div>
+
+        <h5>App Design &amp; Develop</h5>
+              <p>Complete mobile app solutions from attractive UI design to fully working Android & iOS apps.</p>
+
+    </div>
+
+</div>
+            
+          </div>
+          <div class="col-lg-6 reveal reveal-d2">
+            <div class="service-card">
+
+    <div class="service-icon">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+    </div>
+
+    <div>
+
+        <h5>Video Editing</h5>
+              <p>Cinematic video editing with Adobe Premiere Pro, reels, ads and YouTube videos with smooth transitions, color grading and sound that keep viewers hooked till the end.</p>
+
+    </div>
+
+</div>
+            
+          </div>
+          <div class="col-lg-6 reveal reveal-d3">
+            <div class="service-card">
+
+    <div class="service-icon">
+        <i class="fa-solid fa-print"></i>
+    </div>
+
+    <div>
+
+        <h5>Print Design</h5>
+              <p>Print-ready brochures, flyers, posters and business cards with pixel-perfect layouts, correct CMYK colors and bleed settings for a flawless final finish.</p>
+
+    </div>
+
+</div>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SUMMARY ─── -->
+
+<section id="summary">
+  <div class="watermark">SUMMARY</div>
+
+  <div class="section-content">
+
+    <h2 class="section-heading">My <span>Resume</span></h2>
+    <div class="section-divider"></div>
+
+        <div class="row g-5">
+          <!-- Education -->
+          <div class="col-lg-6 reveal">
+            <h5 class="fw-600 mb-3">My Education</h5>
+            <div class="timeline">
+              <div class="tl-item">
+                <span class="tl-year">2019</span>
+                <h6>Bachelor Degree</h6>
+                <div class="tl-place">Delhi University</div>
+                <p>Completed a Bachelor’s degree in Fine Arts, with a focus on visual arts, design, composition, creativity, and visual communication.</p>
+              </div>
+              <div class="tl-item">
+                <span class="tl-year">2017</span>
+                <h6>Diploma in Graphic Design</h6>
+                <div class="tl-place">Adobe Foundation</div>
+                <p>Completed a Graphic & Print Design Certificate Course from Adobe Foundation as part of the Adobe Youth Voices initiative, in collaboration with American India Foundation (AIF) and SADRAG.</p>
+              </div>
+              <div class="tl-item">
+                <span class="tl-year">2016</span>
+                <h6>Intermediate</h6>
+                <div class="tl-place">RSS International</div>
+                <p>
+Completed Intermediate education under the Central Board of Secondary Education (CBSE) with Science as the academic stream, developing a strong foundation in analytical and academic skills.
+</p>
+              </div>
+            </div>
+          </div>
+          <!-- Experience -->
+          <div class="col-lg-6 reveal reveal-d2">
+            <h5 class="fw-600 mb-3">My Experience</h5>
+            <div class="timeline">
+              <div class="tl-item">
+                <span class="tl-year">Sep 2020-Till Date</span>
+                <h6>Senior Designer</h6>
+                <div class="tl-place">Adwiz Digital (B2B)</div>
+                <p>Handled end-to-end design for the company and clients, including websites, mobile apps, social media, print creatives, marketing materials, videos, and reels. Also handled front-end implementation using HTML, CSS, and Bootstrap.
+</p>
+              </div>
+              <div class="tl-item">
+                <span class="tl-year">Mar 2019-Sep 2020</span>
+                <h6>Graphic Designer</h6>
+                <div class="tl-place">Clovia Fashions Private Limited (B2C)</div>
+                <p>DCreated digital and marketing creatives including emailers, banners, mobile app screens, and social media posts, ensuring consistent brand communication across platforms.
+</p>
+              </div>
+              <div class="tl-item">
+                <span class="tl-year">Oct 2017-Mar 2019</span>
+                <h6>Web Graphic Designer </h6>
+                <div class="tl-place">Balj Technology Private Limited</div>
+                <p>Designed website pages, mobile app screens, banners, social media creatives, logos, and marketing materials while maintaining visual consistency and brand identity.
+</p>
+              </div>
+              <div class="tl-item">
+                <span class="tl-year">July 2017-Oct 2017</span>
+                <h6>Motion Designer</h6>
+                <div class="tl-place">Tomfx Design Labs</div>
+                <p>Worked on storyboards, visual concepts, video editing, transitions, and motion graphics to create engaging video content.
+</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    <!-- Core Skills -->
+    <div class="resume-item mt-5 reveal">
+
+      <h4 class="mb-4">Core Skills</h4>
+
+      <div class="skills-category">
+        <h6>UI / UX Design</h6>
+        <div class="skills-list">
+          <span>Figma</span>
+          <span>UI Design</span>
+          <span>Wireframing</span>
+          <span>Prototyping</span>
+          <span>Auto Layout</span>
+          <span>Design Systems</span>
+          <span>Responsive Design</span>
+        </div>
+      </div>
+
+      <div class="skills-category mt-4">
+        <h6>Graphic Design</h6>
+        <div class="skills-list">
+          <span>Adobe Photoshop</span>
+          <span>Adobe Illustrator</span>
+          <span>Adobe InDesign</span>
+          <span>Canva</span>
+        </div>
+      </div>
+
+      <div class="skills-category mt-4">
+        <h6>Frontend</h6>
+        <div class="skills-list">
+          <span>HTML5</span>
+          <span>CSS3</span>
+          <span>Bootstrap</span>
+          <span>Javascript</span>
+        </div>
+      </div>
+
+      <div class="skills-category mt-4">
+        <h6>Video & AI Tools</h6>
+        <div class="skills-list">
+          <span>Adobe Premiere Pro</span>
+          <span>ChatGPT</span>
+          <span>Claude AI</span>
+          <span>Stitch</span>
+          <span>Lovable</span>
+          <span>Midjourney</span>
+          <span>Runway</span>
+          <span>Maze</span>
+          <span>Github</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+    
+    <!-- ─── PORTFOLIO ─── -->
+    <section id="portfolio">
+      <div class="watermark">PORTFOLIO</div>
+      <div class="section-content">
+        <h2 class="section-heading">My <span>Portfolio</span></h2>
+        <div class="section-divider"></div>
+        <div class="portfolio-filters reveal">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="design">Website</button>
+          <button class="filter-btn" data-filter="app">App</button>
+          <button class="filter-btn" data-filter="brand">Creatives</button>
+          <button class="filter-btn" data-filter="illusion">Videos</button>
+        </div>
+        <div class="portfolio-grid reveal reveal-d1">
+
+            <!-- ═══ PROJECT 8 ═══ -->
+<div class="portfolio-item" data-cat="design"
+     data-title="LockdIn"
+     data-desc="Designed a productivity and study-focused mobile app concept that helps children stay focused on their studies by controlling access to distracting social media apps. The core idea was to show a study-related quiz whenever a child attempts to open Instagram. If the quiz is not answered correctly, Instagram remains locked, encouraging the child to complete a quick learning activity before accessing the app. I worked on the app’s UI and user flow, focusing on creating a simple, engaging, and child-friendly experience while making the study-first interaction clear and easy to understand.
+."
+     data-client="LockdIn"
+     data-tech="Figma, Wireframing, Prototyping, UI Design, Stitch"
+     data-industry="Study App"
+     data-date="May 2026"
+     data-url="www.lockdin.me">
+  
+  <img src="projects/lockdin-w.jpg" alt="LockdIn"/>
+  <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+</div>
+
+<!-- ═══ PROJECT 8 ═══ -->
+  <div class="portfolio-item" data-cat="design"
+       data-title="Gita Guide"
+       data-desc="Complete brand identity — logo, color system, typography and stationery design for a technology startup."
+       data-client="Gita Guide"
+       data-tech="Illustrator, Photoshop, InDesign"
+       data-industry="Branding"
+       data-date="June 30, 2022"
+       data-url="gitaguide.life">
+    <img src="projects/gita-guide-w.jpg" alt="Corporate Business Website"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+  <!-- ═══ PROJECT 8 ═══ -->
+  <div class="portfolio-item" data-cat="design"
+       data-title="New Era Group"
+       data-desc="Designed a corporate website for New Era Group, a sourcing and trading company with operations across Asia. The goal was to create a professional digital presence that clearly communicated their procurement services, international network, and end-to-end sourcing capabilities. I focused on presenting complex business information in a clean, structured, and easy-to-navigate interface while highlighting their presence across key Asian markets.
+"
+       data-client="New Era Group"
+       data-tech="Chatgpt, Stitch, Claude"
+       data-industry="Branding"
+       data-date="June 30, 2022"
+       data-url="new-eragroup.com">
+    <img src="projects/new-era.jpg" alt="Corporate Business Website"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+<!-- ═══ PROJECT 7 ═══ -->
+  <div class="portfolio-item" data-cat="design"
+       data-title="Business Research"
+       data-desc="Designed a professional website for BRP, a knowledge management and research support company serving search firms across various industries and functions. The goal was to create a clear and structured digital experience that communicates BRP’s expertise, services, and partner-centric approach while making complex information easy to understand. I focused on a clean layout, strong content hierarchy, and a professional visual language aligned with their global business positioning."
+       data-client="Business Research Patners"
+       data-tech="Figma, Photahop Html, CSS3, Bootstrap"
+       data-industry="Branding"
+       data-date="June 30, 2022"
+       data-url="www.brpresearch.com">
+    <img src="projects/brp.jpg" alt="Corporate Business Website"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+  <!-- ═══ PROJECT 2 ═══ -->
+  <div class="portfolio-item" data-cat="design"
+       data-title="Home Automation Services"
+       data-desc="Designed and developed a modern, responsive website for a home automation company using HTML, CSS, and Bootstrap. The goal was to create a clean and user-friendly digital experience that showcased smart home solutions, products, and services in a clear and visually engaging way. I worked on the UI design, responsive layouts, component styling, and overall website structure, ensuring the website worked smoothly across desktop, tablet, and mobile devices.
+"
+       data-client="WBS Innovations"
+       data-tech="Photoshop, Html, CSS3, Bootstrap, JavaScript"
+       data-industry="Automation Services"
+       data-date="October 8, 2023"
+       data-url="www.wbsinnovations.in">
+    <img src="projects/wbs.jpg" alt="Corporate Business Website"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+  <!-- ═══ PROJECT 3 ═══ -->
+  <div class="portfolio-item" data-cat="design"
+       data-title="Adviacent Consulting Services"
+       data-desc="Designed and developed a professional website for Adviacent Consulting Services, a cybersecurity company. I handled the project end to end, starting from the UI and visual design to the final front-end development. The website was designed to communicate the company’s cybersecurity services clearly while creating a modern, professional, and trustworthy digital presence. After finalizing the design, I developed the website using HTML, CSS, and Bootstrap, ensuring a responsive layout and consistent visual experience across different screen sizes. This project gave me hands-on experience in combining UI design with front-end development to take a website from concept to a functional final product.
+
+"
+       data-client="Adviacent"
+       data-tech="HTML5, CSS3, JavaScript"
+       data-industry="Cyber Security"
+       data-date="March 22, 2024"
+       data-url="www.adviacent.com">
+    <img src="projects/adviacent.jpg" alt="Corporate Business Website"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+  <!-- ═══ PROJECT 4 ═══ -->
+  <div class="portfolio-item" data-cat="design"
+       data-title="Brand Identity Design"
+       data-desc="Designed a website for Akshya Pratisthan, an NGO focused on providing inclusive education and support to underprivileged and differently-abled children. The website was designed to communicate their mission, showcase their educational and healthcare initiatives, highlight their impact, and make it easier for people to learn about and support the organization."
+       data-client="Akshay Pratishthan"
+       data-tech="Figma, Html, CSS3, Bootstrap"
+       data-industry="NGO"
+       data-date="June 30, 2025"
+       data-url="www.akshaypratishthan.org">
+    <img src="projects/akshay.jpg" alt="Corporate Business Website"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+  <!-- ═══ PROJECT 6 ═══ -->
+  <div class="portfolio-item" data-cat="design"
+       data-title="Cyber Security"
+       data-desc="Designed a modern website for a cybersecurity and cloud services company offering network security, cloud solutions, and other IT services. The goal was to create a professional and trustworthy digital presence while presenting complex technical services in a clear, simple, and user-friendly way.
+"
+       data-client="App ResQ"
+       data-tech="Figma, Photahop Html, CSS3, Bootstrap"
+       data-industry="Security"
+       data-date="June 30, 2022"
+       data-url="www.appresq.in">
+    <img src="projects/app-resQ.jpg" alt="Corporate Business Website"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+
+  <!-- ═══ PROJECT 1 ═══ -->
+  <div class="portfolio-item" data-cat="design"
+       data-title="Architecture Website Redesign"
+       data-desc="I redesigned an architecture firm's outdated website to create a modern, premium, and visually engaging digital experience. The previous website had an old-fashioned layout and did not effectively showcase their architectural projects. I focused on improving the visual hierarchy, navigation, typography, spacing, and project presentation to create a clean, contemporary website that better reflected the firm's work and brand.
+"
+       data-client="Theme Consultants"
+       data-tech="HTML5, CSS3, Bootstrap, JavaScript"
+       data-industry="Architecture"
+       data-date="January 15, 2024"
+       data-url="https://adwiz.in/theme-june2-2026/">
+    <img src="projects/theme-consultants.jpg" alt="Corporate Business Website"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+ <!-- ═══ PROJECT 8 ═══ -->
+<div class="portfolio-item" data-cat="app"
+     data-title="LockdIn"
+     data-desc="Designed a productivity and study-focused mobile app concept that helps children stay focused on their studies by controlling access to distracting social media apps. The core idea was to show a study-related quiz whenever a child attempts to open Instagram. If the quiz is not answered correctly, Instagram remains locked, encouraging the child to complete a quick learning activity before accessing the app. I worked on the app’s UI and user flow, focusing on creating a simple, engaging, and child-friendly experience while making the study-first interaction clear and easy to understand.
+."
+     data-client="LockdIn"
+     data-tech="Figma, Wireframing, Prototyping, UI Design, Stitch"
+     data-industry="Study App"
+     data-date="May 2026"
+     data-url="www.lockdin.me">
+  
+  <img src="projects/lockdin.jpg" alt="LockdIn"/>
+  <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+</div>
+
+<!-- ═══ APP PROJECT 2 ═══ -->
+<div class="portfolio-item" data-cat="app"
+     data-title="Bhagavad Gita shlokas for reading"
+     data-desc="Gita Guide is a concept-based app designed to help users build a more mindful relationship with spirituality while reducing excessive social media scrolling. The core idea was to create a simple intervention between the user and apps like Instagram. Whenever a user tries to open Instagram, the app presents a Bhagavad Gita shlok along with its meaning. The user needs to read the shlok before accessing the app, creating a short mindful pause before entering a social media environment. I designed the app experience with a focus on simplicity, calmness, and ease of use, while making the spiritual interaction feel natural rather than restrictive.
+."
+     data-client="Gita Guide"
+     data-tech="Figma, Design Systems, Prototyping, Stitch"
+     data-industry="Social"
+     data-date="April 22, 2026"
+     data-url="gitaguide.life">
+  <img src="projects/gita-guide.jpg" alt="Gita Guide"/>
+  <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+</div>
+
+ <!-- ═══ VIDEO PROJECT 1 ═══ -->
+<div class="portfolio-item video-item" data-cat="illusion"
+     data-title="Product Video"
+     data-desc="Created a complete product promotional video starting from a single raw product image. I developed the concept by first designing a custom character, generating the voice and audio, and then creating AI-generated product shots and supporting visuals. I brought all these elements together through video editing, motion, transitions, and sound design to transform a static product image into an engaging and polished promotional video."
+     data-client="Beliram"
+     data-tech="Google Nano Banana, Elevenlabs, Killing 3.0 Motion Control"
+     data-industry="Video Editing"
+     data-date="25 May 2026"
+     data-url="www.Beliram.com"
+     data-video="videos/video1.mp4">
+  <video src="videos/video1.mp4" muted loop playsinline preload="metadata"></video>
+  <div class="portfolio-overlay"><i class="fas fa-play"></i></div>
+</div>
+
+<!-- ═══ VIDEO PROJECT 2 ═══ -->
+<div class="portfolio-item video-item" data-cat="illusion"
+     data-title="Brand Promo Video"
+     data-desc="Created a promotional video for a mobile app using AI-driven visuals and content gathered from the client’s website and app. I researched and collected key information about the app’s features, functionality, and user experience, then transformed that information into a clear visual narrative. The video was designed to explain what the app does, highlight its key features, and communicate its value in an engaging and easy-to-understand format using AI-generated visuals, motion, voice, and video editing.
+"
+     data-client="Gita Guide"
+     data-tech="Google Nano Banana, Seedance 2.5, Premire Pro, Photoshop"
+     data-industry="Video Editing"
+     data-date="June 12, 2026"
+     data-url="gitaguide.life"
+     data-video="videos/video2.mp4">
+  <video src="videos/video2.mp4" muted loop playsinline preload="metadata"></video>
+  <div class="portfolio-overlay"><i class="fas fa-play"></i></div>
+</div>
+
+<!-- ═══ VIDEO PROJECT 3 ═══ -->
+<div class="portfolio-item video-item" data-cat="illusion"
+     data-title="Christmas Reel"
+     data-desc="Created a festive Christmas video for a client by creatively incorporating their product into a seasonal visual concept. The goal was to present the product in a warm and engaging Christmas-themed setting while keeping the brand and product at the center of the creative. I worked on the visual concept, product integration, composition, animation, and video editing to create a festive social media creative that connected the client’s product with the Christmas celebration.
+"
+     data-client="Mp Lights"
+     data-tech="Photoshop, Premiere Pro"
+     data-industry="Video Editing"
+     data-date="Decemeber 25, 2023"
+     data-url="mplights.com"
+     data-video="videos/video3.mp4">
+  <video src="videos/video3.mp4" muted loop playsinline preload="metadata"></video>
+  <div class="portfolio-overlay"><i class="fas fa-play"></i></div>
+</div>
+
+<!-- ═══ VIDEO PROJECT 4 ═══ -->
+<div class="portfolio-item video-item" data-cat="illusion"
+     data-title="Christmas Reel"
+     data-desc="Created a festive Christmas video for a client by creatively incorporating their product into a seasonal visual concept. The goal was to present the product in a warm and engaging Christmas-themed setting while keeping the brand and product at the center of the creative. I worked on the visual concept, product integration, composition, animation, and video editing to create a festive social media creative that connected the client’s product with the Christmas celebration.
+"
+     data-client="Redplaidsco"
+     data-tech="Minimax H3, Premiere Pro, "
+     data-industry="Video Editing"
+     data-date="April 13, 2026"
+     data-url="www.redplaidsco.com"
+     data-video="videos/video4.mp4">
+  <video src="videos/video4.mp4" muted loop playsinline preload="metadata"></video>
+  <div class="portfolio-overlay"><i class="fas fa-play"></i></div>
+</div>
+
+<!-- ═══ VIDEO PROJECT 5 ═══ -->
+<div class="portfolio-item video-item" data-cat="illusion"
+     data-title="Promotional Video"
+     data-desc="Created a festive Christmas video for a client by creatively incorporating their product into a seasonal visual concept. The goal was to present the product in a warm and engaging Christmas-themed setting while keeping the brand and product at the center of the creative. I worked on the visual concept, product integration, composition, animation, and video editing to create a festive social media creative that connected the client’s product with the Christmas celebration.
+"
+     data-client="NLP Confex Marketing"
+     data-tech="Photoshop, Premiere Pro"
+     data-industry="Video Editing"
+     data-date="Decemeber 25, 2023"
+     data-url="sanjaykumaragarwal.com"
+     data-video="videos/video5.mp4">
+  <video src="videos/video5.mp4" muted loop playsinline preload="metadata"></video>
+  <div class="portfolio-overlay"><i class="fas fa-play"></i></div>
+</div>
+
+
+  <!-- ═══ PROJECT 8 ═══ -->
+  <div class="portfolio-item" data-cat="brand"
+       data-title="Instagram Campaign Kit"
+       data-desc="Created an Independence Day creative with a digital marketing concept, combining the spirit of freedom with a modern brand-focused visual approach. The design was created to deliver a festive message while keeping it engaging, relevant, and suitable for digital marketing platforms.
+"
+       data-client="Adwiz Digital"
+       data-tech="Photoshop, Illustrator, Canva"
+       data-industry="Social Media"
+       data-date="July 9, 2024"
+       data-url="adwiz.in">
+    <img src="projects/creative1.jpg" alt="Gita Guide"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+  <!-- ═══ PROJECT 11 ═══ -->
+  <div class="portfolio-item" data-cat="brand"
+       data-title="Festival Social Creatives"
+       data-desc="Created a Ganesh Chaturthi social media creative using the brand’s existing color palette and visual identity. The design combined festive elements with the brand language to create a celebratory visual while maintaining strong brand consistency.
+"
+       data-client="Adwiz Digital"
+       data-tech="Photoshop, Illustrator, Canva"
+       data-industry="Social Media"
+       data-date="October 5, 2024"
+       data-url="adwiz.in">
+    <img src="projects/creative2.jpg" alt="Gita Guide"/>
+    <div class="portfolio-overlay"><i class="fas fa-expand-alt"></i></div>
+  </div>
+
+
+</div>
+      </div>
+    </section>
+
+<!-- ===== Portfolio Project Modal ===== -->
+<div class="pf-overlay" id="pfOverlay">
+  <div class="pf-modal">
+
+    <!-- Cross (×) button -->
+    <button class="pf-close" id="pfClose">&times;</button>
+
+    <!-- Project ka title -->
+    <h2 class="pf-title" id="pfTitle">Project Title 1</h2>
+
+    <div class="pf-body">
+      <!-- LEFT SIDE: image + dots -->
+      <div class="pf-left">
+        <img id="pfImage" src="" alt="Project image">
+        <div class="pf-dots">
+          <span class="pf-dot active" data-i="0"></span>
+          <span class="pf-dot" data-i="1"></span>
+          <span class="pf-dot" data-i="2"></span>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: info + details + share -->
+      <div class="pf-right">
+        <h4>Project Info:</h4>
+        <p class="pf-info" id="pfInfo"></p>
+
+        <h4>Project Details:</h4>
+        <ul class="pf-details">
+          <li><span class="lbl">Client:</span><span class="val" id="pfClient"></span></li>
+          <li><span class="lbl">Technologies:</span><span class="val" id="pfTech"></span></li>
+          <li><span class="lbl">Industry:</span><span class="val" id="pfIndustry"></span></li>
+          <li><span class="lbl">Date:</span><span class="val" id="pfDate"></span></li>
+          <li><span class="lbl">URL:</span><a id="pfUrl" href="#" target="_blank">www.example.com</a></li>
+        </ul>
+
+        <div class="pf-share">
+          <span class="lbl">Share:</span>
+          <a id="shFb" href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+          <a id="shTw" href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+          <a id="shG" href="#" target="_blank"><i class="fab fa-google"></i></a>
+          <a id="shIg" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a id="shMail" href="#"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- ─── TESTIMONIALS ─── -->
+    <section id="testimonials">
+      <div class="watermark">TESTIMONIAL</div>
+      <div class="section-content">
+        <h2 class="section-heading">Client <span>Testimonials</span></h2>
+        <div class="section-divider"></div>
+        <div class="row g-3">
+          <div class="col-md-6 reveal reveal-d1">
+            <div class="testimonial-card">
+              <div class="testi-header">
+                <img src="https://i.ibb.co/vCxmrN2q/1584695274559.jpg" alt="1584695274559" border="0"class="testi-avatar"/>
+                <div>
+                  <p class="testi-name">Vidur Bharany</p>
+                  <p class="testi-role">CEO of Adwiz Digital</p>
+                </div>
+              </div>
+              <p class="testi-text">"Rajnesh was a highly creative and dependable designer at Adwiz. He handled clients professionally, understood their requirements well, and consistently delivered quality work. He was always ready to take on new challenges and had the knowledge and flexibility to handle different kinds of creative and design projects. A valuable team member whom I would gladly recommend.
+
+"</p>
+              <div class="testi-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 reveal reveal-d2">
+            <div class="testimonial-card">
+              <div class="testi-header">
+                <img src="https://i.ibb.co/WJYDkFs/1784074163146.jpg" alt="1784074163146" border="0" class="testi-avatar"/>
+                <div>
+                  <p class="testi-name">Monique Frederick</p>
+                  <p class="testi-role">Founder of Photohub</p>
+                </div>
+              </div>
+              <p class="testi-text">
+
+“Working with Rajnesh was an amazing experience. I initially had only a rough idea in my mind, but he turned that idea into a complete visual identity. From designing the logo to the website, app, and pitch deck, he handled everything with great attention to detail and consistency.
+
+What impressed me the most was how he understood my vision and turned it into something much better than I had imagined. I loved the logo so much that I even got it printed on my own T-shirt. That really says how happy I was with the final design.
+
+Rajnesh is creative, detail-oriented, and genuinely understands how to turn an idea into a strong visual experience.”
+</p>
+              <div class="testi-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CONTACT ─── -->
+    <section id="contact">
+      <div class="watermark">CONTACT</div>
+      <div class="section-content">
+        <h2 class="section-heading">Get In <span>Touch</span></h2>
+        <div class="section-divider"></div>
+        <div class="row g-4">
+          <!-- Info -->
+          <div class="col-lg-5 reveal">
+            <h5 style="font-size:0.95rem;font-weight:600;margin-bottom:1.25rem;">Address</h5>
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div class="contact-info-text">
+                <h6>Location</h6>
+                <span>Noida Sec-45</span>
+              </div>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><i class="fas fa-phone"></i></div>
+              <div class="contact-info-text">
+                <h6>Phone</h6>
+                <span>7217724830</span>
+              </div>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+              <div class="contact-info-text">
+                <h6>Email</h6>
+                <span>rkrajnesh2@gmail.com</span>
+              </div>
+            </div>
+          </div>
+          <!-- Form -->
+          <div class="col-lg-7 reveal reveal-d2">
+            <h5 style="font-size:0.95rem;font-weight:600;margin-bottom:1.25rem;">Send Us A Note</h5>
+            <form>
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" placeholder="Your Name"/>
+                </div>
+                <div class="col-sm-6">
+                  <input type="email" class="form-control" placeholder="Your Email"/>
+                </div>
+                <div class="col-12">
+                  <input type="text" class="form-control" placeholder="Subject"/>
+                </div>
+                <div class="col-12">
+                  <textarea class="form-control" placeholder="Your Message"></textarea>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn-send">Send Message</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+    <p>Copyright © 2026 <a href="#">Rajnesh Kushwaha</a>. All Rights Reserved.</p>
+</footer>
+
+  </main><!-- /main-content -->
+</div><!-- /wrapper -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+  /* ──────────────────────────────────────────────
+     1. TYPING ANIMATION
+  ────────────────────────────────────────────── */
+  const phrases = ['UI Designer', 'Graphic Designer', 'Video Editor', 'Frontend Developer'];
+  let phraseIdx = 0, charIdx = 0, deleting = false;
+  const typedEl = document.getElementById('typedText');
+  function type() {
+    const current = phrases[phraseIdx];
+    if (!deleting) {
+      typedEl.textContent = current.slice(0, ++charIdx);
+      if (charIdx === current.length) { deleting = true; setTimeout(type, 1800); return; }
+    } else {
+      typedEl.textContent = current.slice(0, --charIdx);
+      if (charIdx === 0) { deleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; }
+    }
+    setTimeout(type, deleting ? 60 : 90);
+  }
+  type();
+
+  /* ──────────────────────────────────────────────
+     2. SIDEBAR ACTIVE LINK (scroll spy)
+  ────────────────────────────────────────────── */
+  const sections = document.querySelectorAll('section[id], #home');
+  const navLinks = document.querySelectorAll('#sidebarNav a');
+
+  function updateActiveNav() {
+    let current = '';
+    sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 120) current = sec.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  }
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav();
+
+  /* ──────────────────────────────────────────────
+     3. SMOOTH SCROLL for NAV LINKS
+  ────────────────────────────────────────────── */
+  navLinks.forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        window.scrollTo({ top: target.offsetTop - 10, behavior: 'smooth' });
+        // Close mobile sidebar
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+      }
+    });
+  });
+
+ /* ── 4. HAMBURGER MENU (mobile) – FIXED ── */
+const mobileMenu  = document.getElementById('mobile-menu');
+const overlay     = document.getElementById('sidebar-overlay');
+const hamburger   = document.getElementById('hamburger');
+const mobileClose = document.getElementById('mobile-close');
+
+function openMenu(){  mobileMenu.classList.add('open');  overlay.classList.add('open'); }
+function closeMenu(){ mobileMenu.classList.remove('open'); overlay.classList.remove('open'); }
+
+hamburger.addEventListener('click', openMenu);
+mobileClose.addEventListener('click', closeMenu);
+overlay.addEventListener('click', closeMenu);
+
+document.querySelectorAll('.mnav-list a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelectorAll('.mnav-list a').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    closeMenu();
+  });
+});
+  /* ──────────────────────────────────────────────
+     5. SCROLL REVEAL
+  ────────────────────────────────────────────── */
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  /* ──────────────────────────────────────────────
+     6. SKILL BARS (animate on scroll)
+  ────────────────────────────────────────────── */
+  const skillObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.skill-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width;
+        });
+        skillObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('#summary').forEach(el => skillObs.observe(el));
+  // Set initial width to 0
+  document.querySelectorAll('.skill-fill').forEach(b => b.style.width = '0%');
+
+/* ──────────────────────────────────────────────
+   7. PORTFOLIO FILTERS + LOAD MORE
+────────────────────────────────────────────── */
+(function () {
+  const grid = document.querySelector('.portfolio-grid');
+  if (!grid) return;
+
+  // Load More button (auto-create hota hai grid ke neeche)
+  const btn = document.createElement('button');
+  btn.id = 'loadMore';
+  btn.innerHTML = '<span>Load More Projects</span> <i class="fas fa-chevron-down"></i>';
+  grid.insertAdjacentElement('afterend', btn);
+
+  const STEP = 6;   // 👇 pehle kitne projects dikhane hain (6/8/9 jo chaho)
+  let currentFilter = 'all';
+  let visibleCount = STEP;
+
+  function apply() {
+    const items = document.querySelectorAll('.portfolio-item');
+    let shown = 0, total = 0;
+
+    items.forEach(item => {
+      const match = currentFilter === 'all' || item.dataset.cat === currentFilter;
+      if (!match) { item.style.display = 'none'; return; }
+      total++;
+      if (shown < visibleCount) { item.style.display = ''; shown++; }
+      else { item.style.display = 'none'; }
+    });
+
+    // Button: jab aur projects bache ho tabhi dikhe
+    if (total > shown) {
+      btn.style.display = 'flex';
+      btn.querySelector('span').textContent = 'Load More Projects (' + (total - shown) + ' more)';
+    } else {
+      btn.style.display = 'none';
+    }
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      currentFilter = b.dataset.filter;
+      visibleCount = STEP;   // filter badalne pe wapas 6 se shuru
+      apply();
+    });
+  });
+
+  btn.addEventListener('click', () => { visibleCount += STEP; apply(); });
+
+  apply();
+})();
+
+/* ──────────────────────────────────────────────
+ /* ──────────────────────────────────────────────
+   PORTFOLIO MODAL — FINAL
+────────────────────────────────────────────── */
+(function () {
+  const overlay = document.getElementById('pfOverlay');
+  if (!overlay) return;
+
+  const pfTitle    = document.getElementById('pfTitle');
+  const pfInfo     = document.getElementById('pfInfo');
+  const pfClient   = document.getElementById('pfClient');
+  const pfTech     = document.getElementById('pfTech');
+  const pfIndustry = document.getElementById('pfIndustry');
+  const pfDate     = document.getElementById('pfDate');
+  const pfUrl      = document.getElementById('pfUrl');
+  const pfLeft     = document.querySelector('.pf-left');
+  const dotsWrap   = document.querySelector('.pf-dots');
+
+  const pfItems = document.querySelectorAll('.portfolio-item');
+  if (!pfItems.length) return;
+
+  let gallery = [], current = 0;
+
+  pfItems.forEach((item) => {
+    item.style.cursor = 'pointer';
+    item.addEventListener('click', e => { e.preventDefault(); openModal(item); });
+
+    const vid = item.querySelector('video');
+    if (vid) {
+      item.addEventListener('mouseenter', () => vid.play().catch(() => {}));
+      item.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+    }
+  });
+
+  function openModal(item) {
+    const data = item.dataset;
+    pfLeft.innerHTML = '';
+
+    if (data.video) {
+      const wrap = document.createElement('div');
+      wrap.className = 'pf-video-wrap';
+      wrap.innerHTML = '<video src="' + data.video + '" controls playsinline></video>';
+      pfLeft.appendChild(wrap);
+      dotsWrap.style.display = 'none';
+    }
+    else if (data.pdf) {
+      const wrap = document.createElement('div');
+      wrap.className = 'pf-pdf-wrap';
+      wrap.innerHTML =
+        '<i class="fas fa-file-pdf"></i>' +
+        '<h5>' + (data.title || 'Case Study') + '</h5>' +
+        '<p>PDF Case Study' + (data.date ? ' • ' + data.date : '') + '</p>' +
+        '<div class="pf-pdf-actions">' +
+          '<a class="pf-pdf-btn" href="' + data.pdf + '" target="_blank"><i class="fas fa-book-open"></i> Read Case Study</a>' +
+          '<a class="pf-pdf-btn ghost" href="' + data.pdf + '" download><i class="fas fa-download"></i> Download PDF</a>' +
+        '</div>';
+      pfLeft.appendChild(wrap);
+      dotsWrap.style.display = 'none';
+    }
+    else if (data.images) {
+      gallery = data.images.split(',').map(s => s.trim()).filter(Boolean);
+      current = 0;
+      const img = document.createElement('img');
+      img.id = 'pfImage';
+      pfLeft.appendChild(img);
+      buildDots();
+      showImage();
+      dotsWrap.style.display = gallery.length > 1 ? 'flex' : 'none';
+    }
+    else {
+      const thumb = item.querySelector('img');
+      gallery = [thumb ? thumb.src : ''];
+      current = 0;
+      const img = document.createElement('img');
+      img.id = 'pfImage';
+      pfLeft.appendChild(img);
+      buildDots();
+      showImage();
+      dotsWrap.style.display = 'none';
+    }
+
+    pfTitle.textContent    = data.title || 'Project Title';
+    pfInfo.textContent     = data.desc || '';
+    pfClient.textContent   = data.client || '';
+    pfTech.textContent     = data.tech || '';
+    pfIndustry.textContent = data.industry || '';
+    pfDate.textContent     = data.date || '';
+    pfUrl.href             = 'https://' + (data.url || '#');
+    pfUrl.textContent      = data.url || '';
+
+    const u = encodeURIComponent('https://' + (data.url || ''));
+    const t = encodeURIComponent(data.title || '');
+    document.getElementById('shFb').href   = 'https://www.facebook.com/sharer/sharer.php?u=' + u;
+    document.getElementById('shTw').href   = 'https://twitter.com/intent/tweet?text=' + t + '&url=' + u;
+    document.getElementById('shMail').href = 'mailto:?subject=' + t + '&body=' + u;
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function buildDots() {
+    dotsWrap.innerHTML = '';
+    gallery.forEach((src, i) => {
+      const d = document.createElement('span');
+      d.className = 'pf-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => { current = i; showImage(); });
+      dotsWrap.appendChild(d);
+    });
+  }
+
+  function showImage() {
+    const img = document.getElementById('pfImage');
+    if (img) img.src = gallery[current];
+    dotsWrap.querySelectorAll('.pf-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function closeModal() {
+    const vid = document.querySelector('.pf-video-wrap video');
+    if (vid) { vid.pause(); vid.src = ''; }
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('pfClose').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+})();
+
+/* ═══════════ UNIQUE FX PACK ═══════════ */
+(function(){
+  /* 👇 CONFIG: apna naam likho — boot screen pe yahi decode hoga */
+  const NAME = 'RAJNESH KUSHWAHA';
+  const CHARS = '!<>-_\\/[]{}—=+*^?#01';
+
+/* ═══════════ INSTANT INTRO (zero loading delay) ═══════════ */
+(function(){
+  const CHARS = '!<>-_\\/[]{}—=+*^?#01';
+
+  /* 1) Naam sidebar me LIVE decode hota hai — site rukta nahi */
+  const nameEl = document.querySelector('.sidebar-name, .mnav-name, #sidebar h1, #sidebar .name, .mnav-top span');
+  if(nameEl){
+    const final = nameEl.textContent.trim();
+    const t0 = performance.now();
+    (function scr(t){
+      const p = Math.min((t - t0)/1000, 1), reveal = Math.floor(p * final.length);
+      let out = '';
+      for(let i=0;i<final.length;i++)
+        out += i < reveal ? final[i] : (final[i]===' ' ? ' ' : CHARS[Math.random()*CHARS.length|0]);
+      nameEl.textContent = out;
+      if(p < 1) requestAnimationFrame(scr); else nameEl.textContent = final;
+    })(t0);
+  }
+
+  /* 2) Hero content ek-ek karke 3D entrance */
+  document.querySelectorAll('#home h1, #home h2, #home h3, #home p, #home a').forEach((el,i)=>{
+    el.style.animation = 'heroIn .8s cubic-bezier(.2,.7,.3,1) both';
+    el.style.animationDelay = (i * 0.12) + 's';
+  });
+})();
+
+  /* ── 2) CONSTELLATION NETWORK (hero) ── */
+  const home = document.getElementById('home');
+  if(home){
+    const cv = document.createElement('canvas'); cv.id = 'fx-net'; home.appendChild(cv);
+    const ctx = cv.getContext('2d');
+    let W, H, mouse = {x:-999, y:-999};
+    function size(){ W = cv.width = home.offsetWidth; H = cv.height = home.offsetHeight; }
+    size(); addEventListener('resize', size);
+    const pts = [];
+    for(let i=0;i<60;i++) pts.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.5, vy:(Math.random()-.5)*.5});
+    home.addEventListener('mousemove', e=>{ const r = cv.getBoundingClientRect(); mouse.x = e.clientX-r.left; mouse.y = e.clientY-r.top; });
+    home.addEventListener('mouseleave', ()=>{ mouse.x = -999; mouse.y = -999; });
+    (function tick(){
+      ctx.clearRect(0,0,W,H);
+      for(const p of pts){
+        p.x += p.vx; p.y += p.vy;
+        if(p.x<0||p.x>W) p.vx*=-1;
+        if(p.y<0||p.y>H) p.vy*=-1;
+        const dx=p.x-mouse.x, dy=p.y-mouse.y, d=Math.hypot(dx,dy);
+        if(d<120 && d>0){ p.x += dx/d*1.2; p.y += dy/d*1.2; }
+        ctx.beginPath(); ctx.arc(p.x,p.y,1.6,0,7); ctx.fillStyle='rgba(65,84,241,.8)'; ctx.fill();
+      }
+      for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+        const a=pts[i], b=pts[j], d=Math.hypot(a.x-b.x, a.y-b.y);
+        if(d<110){
+          ctx.strokeStyle='rgba(65,84,241,'+((1-d/110)*.35)+')'; ctx.lineWidth=1;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+      requestAnimationFrame(tick);
+    })();
+  }
+
+/* ═══════════ IMAGE CLICK → FULL-SCREEN ZOOM ═══════════ */
+(function(){
+  const zoom = document.createElement('div');
+  zoom.id = 'pfZoom';
+  zoom.innerHTML = '<img src="" alt=""/>';
+  document.body.appendChild(zoom);
+  const zoomImg = zoom.querySelector('img');
+
+  // Modal wali image pe click → full-screen
+  document.addEventListener('click', e => {
+    if (e.target.id === 'pfImage') {
+      zoomImg.src = e.target.src;
+      zoom.classList.add('open');
+    }
+  });
+
+  // Kahin bhi click ya Esc → zoom band
+  zoom.addEventListener('click', () => zoom.classList.remove('open'));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') zoom.classList.remove('open');
+  });
+})();
+
+  /* ── 3) SCRAMBLE DECODE TITLES ── */
+  const tio = new IntersectionObserver(es=>es.forEach(en=>{
+    if(!en.isIntersecting) return;
+    tio.unobserve(en.target);
+    const el = en.target, fin = el.dataset.txt, s = performance.now();
+    (function f(t){
+      const p = Math.min((t-s)/900,1), reveal = Math.floor(p*fin.length);
+      let out='';
+      for(let i=0;i<fin.length;i++) out += i<reveal ? fin[i] : (fin[i]===' '?' ':CHARS[Math.random()*CHARS.length|0]);
+      el.textContent = out;
+      if(p<1) requestAnimationFrame(f); else el.textContent = fin;
+    })(s);
+  }), {threshold:.6});
+  document.querySelectorAll('h2').forEach(h=>{
+    if(h.closest('#pfOverlay,#mobile-menu,#sidebar')) return;
+    h.dataset.txt = h.textContent.trim();
+    tio.observe(h);
+  });
+
+  /* ── 4) SPOTLIGHT CARDS ── */
+  document.querySelectorAll('[class*="item"],[class*="card"],[class*="box"],[class*="service"],[class*="testimonial"]').forEach(el=>{
+    if(el.closest('#sidebar,#mobile-menu,#pfOverlay')) return;
+    if(el.offsetWidth<70||el.offsetHeight<70||el.offsetWidth>520||el.offsetHeight>520) return;
+    el.classList.add('fx-spot');
+    el.addEventListener('mousemove', e=>{
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx',(e.clientX-r.left)+'px');
+      el.style.setProperty('--my',(e.clientY-r.top)+'px');
+    });
+  });
+
+  /* ── 5) CLICK SPARKS ── */
+  const cols = ['#2d40d8','#6f42c1','#00b3ff','#ff6b9d','#ffd166'];
+  addEventListener('click', e=>{
+    for(let i=0;i<10;i++){
+      const s = document.createElement('span'); s.className='fx-spark';
+      const a = Math.random()*Math.PI*2, d = 40+Math.random()*50;
+      s.style.left = e.clientX+'px'; s.style.top = e.clientY+'px';
+      s.style.background = cols[i%cols.length]; s.style.color = cols[i%cols.length];
+      s.style.setProperty('--tx', Math.cos(a)*d+'px');
+      s.style.setProperty('--ty', Math.sin(a)*d+'px');
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(), 750);
+    }
+  });
+})();
+
+
+document.querySelectorAll('a').forEach(a => {
+  if(/download\s*cv/i.test(a.textContent)){
+    a.setAttribute('href', 'resume.pdf');
+    a.setAttribute('download', 'resume.pdf');
+  }
+});
+
+
+</script>
+</body>
+</html>
